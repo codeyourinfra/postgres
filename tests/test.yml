@@ -1,0 +1,12 @@
+---
+- hosts: containers
+  roles:
+    - postgres
+  tasks:
+    - name: Check if the specific version of PostgreSQL was really installed
+      shell: dpkg-query -W postgresql-{{ postgres_version }}
+      register: command
+    - name: Assert PostgreSQL version
+      assert:
+        that: command.rc == 0
+        msg: "Failure on PostgreSQL {{ postgres_version }} installation"
